@@ -1,0 +1,23 @@
+services:
+  # All-in-one Jaeger: OTLP collector (4317 gRPC, 4318 HTTP) + UI (16686).
+  jaeger:
+    image: jaegertracing/all-in-one:1.62
+    container_name: keel-jaeger
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - "16686:16686"   # UI
+      - "4317:4317"     # OTLP/gRPC
+      - "4318:4318"     # OTLP/HTTP
+
+  # The agent — runs the workload, sends traces/metrics to Jaeger via OTLP.
+  agent:
+    build: .
+    container_name: keel-research-agent
+    depends_on:
+      - jaeger
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_SERVICE_NAME=keel-research-agent
+      - AGENT_CONCURRENCY=24
+      - AGENT_ROUNDS=3

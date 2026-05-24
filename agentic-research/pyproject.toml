@@ -1,0 +1,22 @@
+[project]
+name = "keel-research-agent"
+version = "0.0.1"
+description = "Reference agentic example for Keel — a multi-step research agent demonstrating multi-model reliability + distributed OTel tracing in <100 LOC of agent code."
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Raj Yakkali" }]
+dependencies = [
+    "keel-llm-reliability>=0.1.2",
+    "keel-llm-adapter-openai>=0.1.2",
+    "keel-llm-otel[full]>=0.1.0",
+    # OTel SDK + OTLP exporter for sending to Jaeger via the local collector
+    "opentelemetry-sdk>=1.20",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.20",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/keel_research_agent"]
